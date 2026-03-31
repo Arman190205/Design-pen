@@ -1,23 +1,21 @@
-public final class PenFactory {
-    private PenFactory() { }
+class PenFactory {
 
-    public static Pen createBallpoint(String color) {
-        return new Pen.PenBuilder()
-                .color(color)
-                .tipSize(0.7)
-                .maxInk(100)
-                .writeStrategy(new NonWhitespaceWriteStrategy())
-                .capBehavior(new SimpleCapBehavior())
-                .build();
-    }
+    public static IPen getPen(String type, String color, String mechanismType) {
 
-    public static Pen createGel(String color) {
-        return new Pen.PenBuilder()
-                .color(color)
-                .tipSize(0.5)
-                .maxInk(120)
-                .writeStrategy(new NonWhitespaceWriteStrategy())
-                .capBehavior(new SimpleCapBehavior())
-                .build();
+        PenMechanism mechanism;
+
+        if (mechanismType.equals("with-cap")) {
+            mechanism = new CapMechanism();
+        } else {
+            mechanism = new ClickMechanism();
+        }
+
+        if (type.equals("ball-pen")) {
+            return new BallPen(color, mechanism);
+        } else if (type.equals("ink-pen")) {
+            return new FountainPen(color, mechanism);
+        }
+
+        throw new IllegalArgumentException("Invalid pen type");
     }
 }
